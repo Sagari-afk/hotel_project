@@ -1,5 +1,6 @@
 # 5128476850:AAHf5Phs_UGRpfdJzElovnKd7Yy1WuMCwjY
 import os
+from time import sleep
 
 from telebot import (
     TeleBot,
@@ -68,7 +69,7 @@ def book_hotel(msg: types.Message, current_func):
 
     print(f"\n[Current]:{current_func}\n[Previous]:{previous_func}\n[Message]:{msg.text}")
 
-    validate(msg, current_func, FUNC_MAPPER)
+    validate(msg, current_func, FUNC_MAPPER, booking_data)
 
     current_msg = FUNC_MAPPER[current_func]["ok_msg"]
     err_msg = FUNC_MAPPER[current_func]["err_msg"]
