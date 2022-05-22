@@ -6,6 +6,7 @@ from telebot import (
     types
 )
 
+
 from bot.utils import validate
 from hotels_api import HotelsAPI
 from constants import FUNC_MAPPER
@@ -15,7 +16,7 @@ from msg_templates import (
     BOOKING_NAME,
 )
 
-TELEGRAM_API_KEY = "5128476850:AAHf5Phs_UGRpfdJzElovnKd7Yy1WuMCwjY"
+TELEGRAM_API_KEY = "5307876588:AAGcDCiuMEAsaIMFDJKWCeEbauLwbKVdoFM"
 bot = TeleBot(TELEGRAM_API_KEY)
 api = HotelsAPI()
 booking_data = {}
@@ -49,6 +50,7 @@ def get_hotels_by_city(msg: types.Message):
 # /book_hotel
 @bot.message_handler(commands=["book_hotel"])
 def book_hotel_entry(msg: types.Message):
+    print('Start Booking')
     msg = bot.send_message(msg.chat.id, BOOKING_NAME)
     bot.register_next_step_handler(
         msg,
@@ -57,6 +59,7 @@ def book_hotel_entry(msg: types.Message):
 
 
 def book_hotel(msg: types.Message, current_func):
+    print('book_hotel func was called')
     user_id = msg.from_user.id
     chat_id = msg.chat.id
 
@@ -80,15 +83,13 @@ def book_hotel(msg: types.Message, current_func):
 
     print(f"Booking data: {booking_data}")
     msg = bot.send_message(msg.chat.id, current_msg)
-    if next_func:
-        register_next_func(next_func=next_func, msg=msg)
-    else:
+    if not next_func:
         make_reservation(user_id, chat_id)
-
     register_next_func(next_func=next_func, msg=msg)
 
 
 def register_next_func(next_func, msg):
+    print(f"[Next Function]: {next_func}")
     bot.register_next_step_handler(
         msg,
         lambda msg: book_hotel(msg, next_func)

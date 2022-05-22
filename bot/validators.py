@@ -20,7 +20,7 @@ def persons_validator(validate_persons_amount: str) -> Union[None, str]:
         return f"err: too many persons: {persons_int}"
 
 
-def date_validator(validate_date: str, user_id) -> Union[None, str]:
+def date_validator(validate_date: str) -> Union[None, str]:
     today = datetime.now()
     for date_template in DATE_TEMPLATES:
         try:
