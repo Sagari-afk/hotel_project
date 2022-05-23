@@ -5,7 +5,7 @@ from typing import Callable
 import validators
 
 
-def validate(msg, current_func, FUNC_MAPPER):
+def validate(msg, current_func, FUNC_MAPPER, booking_data):
     print(f"[{current_func}] validate data: {msg.text}")
     func_validators = FUNC_MAPPER[current_func].get("validators", [])
     err = None
@@ -14,7 +14,12 @@ def validate(msg, current_func, FUNC_MAPPER):
     for validator in func_validators:
         func = search_func_in_module(validator, "validators")
         if func:
-            err = func(msg.text)
+            if func.__name__ == 'date_validator':
+                err = func(msg.text, current_func, booking_data, msg.from_user.id)
+            elif func.__name__ == 'hotel_in_city_validator':
+                err = func(msg.text, booking_data, msg.from_user.id)
+            else:
+                err = func(msg.text)
         else:
             print(f"[{func_validators}] no such functions in module 'validators'")
         if err:

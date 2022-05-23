@@ -57,6 +57,6 @@ FUNC_MAPPER = {
         "dict_key": "hotel",
         "ok_msg": "We are finding a hotel for you parameters",
         "err_msg": "",
-        "validators": []
+        "validators": ['hotel_in_city_validator']
     },
 }

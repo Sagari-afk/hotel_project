@@ -20,8 +20,15 @@ def persons_validator(validate_persons_amount: str) -> Union[None, str]:
         return f"err: too many persons: {persons_int}"
 
 
-def date_validator(validate_date: str, user_id) -> Union[None, str]:
+def date_validator(validate_date: str, current_func: str, booking_data: dict, user_id: int) -> Union[None, str]:
     today = datetime.now()
+    print(current_func)
+    if current_func == 'get_booking_end':
+        print('booking_END')
+        booking_start_date = booking_data[user_id]['booking_start']
+        if validate_date <= booking_start_date:
+            return f"err: Booking end date({validate_date}) must be later then booking start ({validate_date})"
+
     for date_template in DATE_TEMPLATES:
         try:
             booking_date = datetime.strptime(validate_date, date_template)
@@ -35,8 +42,9 @@ def date_validator(validate_date: str, user_id) -> Union[None, str]:
     return f"err: unsupported date format: {validate_date}"
 
 
-def booking_end_validator(validate_date: str) -> Union[None, str]:
-    pass
+def booking_end_validator(validate_date: str, booking_data, user_id) -> Union[None, str]:
+    booking_start_date = booking_data[user_id]['booking_start']
+    print(booking_start_date)
 
 
 def city_validator(validate_city: str) -> Union[None, str]:
@@ -48,8 +56,14 @@ def city_validator(validate_city: str) -> Union[None, str]:
 
 
 # TODO Check if Hotel exist in User' chosen city
-def hotel_in_city_validator(validate_hotel: str) -> Union[None, str]:
-    pass
+def hotel_in_city_validator(validate_hotel: str, booking_data, user_id) -> Union[None, str]:
+    city = booking_data[user_id]['city']
+    hotels_obj: list = HotelsAPI.get_hotels_by_city(city)
+    hotels = [hotel['title'] for hotel in hotels_obj]
+    print(hotels, validate_hotel)
+    if validate_hotel not in hotels:
+        return f'Hotel: {validate_hotel} not exist in city {city}'
+
 
 
 if __name__ == "__main__":
